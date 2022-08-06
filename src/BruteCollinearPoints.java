@@ -5,7 +5,10 @@ public class BruteCollinearPoints
 
     private Point[] _points;
     private LineSegment[] segmentos;
-    private int segmentCounter; 
+    private Double[] pendientes;
+    private Linea[] lineaAux;
+    private int segmentCounter;
+     
 
     public BruteCollinearPoints(Point[] points)    // finds all line segments containing 4 points
     {
@@ -25,14 +28,15 @@ public class BruteCollinearPoints
         }     
         segmentCounter = 0;
         this._points = points;
-        segmentos = new LineSegment[_points.length*2];
+        pendientes = new Double[_points.length*2];
+        lineaAux = new Linea[_points.length*2];
     }
     public int numberOfSegments()        // the number of line segments
     {
         if(_points.length < 2)
             return 0;
           
-        return 1;
+        return segmentCounter;
     }
     public LineSegment[] segments()                // the line segments
     {
@@ -40,55 +44,72 @@ public class BruteCollinearPoints
         if (_points.length==1)
             return new LineSegment[0]; 
       
-        Double pendiente1 = 0.00;
-        Double pendiente2 = 0.00;
-        Double lineaPendiente = -999999999.00;
-        LineSegment temp;
-        int cont = 0;
-      
         for (int i = 0; i < _points.length-1; i++)
         {
-            pendiente1 = _points[i].slopeTo(_points[i+1]);
-            temp = new LineSegment(_points[i], _points[i+1]);
+            for (int j = i+1; j < _points.length; j++)
+            {
+                conectSegment(_points[i], _points[j]);                    
+                
+            }
             
-            if(i+2 >= _points.length )
-            {
-                segmentos[segmentCounter]= temp;
-                segmentCounter++;
-                continue;
-            }
-            for (int j = i+2; j < _points.length; j++)
-            {
-                pendiente2 =_points[i].slopeTo(_points[j]);
-                
-            // |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
-            // |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
-            // |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
-                if( Double.compare(pendiente1,pendiente2) == 0)
-                {
-                   if(pendiente1 == lineaPendiente)
-                    continue;
-                   temp = new LineSegment(_points[i], _points[j]);
-                   lineaPendiente = pendiente1;                                         
-                //    cont++;
-                   
-                }              
-                
-                
-                else
-                {
-                    segmentos[segmentCounter] = new LineSegment(_points[i], _points[j]);
-                    segmentCounter++;
-                }
-
-            }
-            segmentos[segmentCounter] = temp;
-            segmentCounter++;    
         }
-        
+        segmentos = new LineSegment[segmentCounter];
 
+        for (int i = 0; i < lineaAux.length; i++)
+        {
+            if(lineaAux[i]==null)
+                break;
+            segmentos[i] = new LineSegment(lineaAux[i].p1, lineaAux[i].p2);
+        }    
+        
         return segmentos;
     }
 
+    // ||||||||||| PRIVATE AREA ||||||||||||||
+
+    private class Linea
+    {
+        public Point p1;
+        public Point p2;
+        Linea(Point p, Point q)
+        {
+            this.p1 = p;
+            this.p2 = q; 
+        }
+    }
+    /*
+     * If the slope is found, it returns an integer that represents the index where it was found,
+     * otherwise it returns -1
+     * @return a integer
+     */
+    private int findSlope(Double pen)
+    {
+                       
+        for (int i = 0; i < pendientes.length; i++)
+        {
+            if(pendientes[i]==null)
+                break;
+            if (Double.compare(pendientes[i], pen) == 0)
+                return i;
+         
+        }
+        return -1;
+
+    }
+    private void conectSegment(final Point point1, final Point point2)
+    {
+        Double slope = point1.slopeTo(point2);
+        int index = findSlope(slope);
+        if( index == -1)
+        {
+            lineaAux[segmentCounter]= new Linea(point1, point2);
+            pendientes[segmentCounter] = slope;
+            segmentCounter++;
+            return;
+        }
+        
+        lineaAux[index].p2 = (lineaAux[index].p2.compareTo(point2) == -1 ) ? point2 : lineaAux[index].p2;
+        
+    }
     
 }
