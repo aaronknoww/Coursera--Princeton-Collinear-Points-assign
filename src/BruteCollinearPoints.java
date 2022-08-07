@@ -7,10 +7,11 @@ public class BruteCollinearPoints
     private LineSegment[] segmentos;
     private Double[] pendientes;
     private Linea[] lineaAux;
+    private int counterCtr;//-----------> To have control of the positions of the two arrays lineaAux and Pendientes.
     private int segmentCounter;
      
 
-    public BruteCollinearPoints(Point[] points)    // finds all line segments containing 4 points
+    public BruteCollinearPoints(Point[] points)//--->finds all line segments containing 4 points
     {
         if (points == null)
             throw new IllegalArgumentException("An Array with a null value is not permitted");
@@ -26,19 +27,18 @@ public class BruteCollinearPoints
             }
             i++;
         }     
-        segmentCounter = 0;
+        counterCtr = 0;
         this._points = points;
-        pendientes = new Double[_points.length*2];
-        lineaAux = new Linea[_points.length*2];
+        pendientes = new Double[_points.length*3];
+        lineaAux = new Linea[_points.length*3];
+        segmentCounter = 0;
     }
-    public int numberOfSegments()        // the number of line segments
+    public int numberOfSegments()//----------------->the number of line segments
     {
-        if(_points.length < 2)
-            return 0;
-          
+        
         return segmentCounter;
     }
-    public LineSegment[] segments()                // the line segments
+    public LineSegment[] segments()//--------------->the line segments
     {
         Arrays.sort(_points);
         if (_points.length==1)
@@ -53,14 +53,9 @@ public class BruteCollinearPoints
             }
             
         }
-        segmentos = new LineSegment[segmentCounter];
 
-        for (int i = 0; i < lineaAux.length; i++)
-        {
-            if(lineaAux[i]==null)
-                break;
-            segmentos[i] = new LineSegment(lineaAux[i].p1, lineaAux[i].p2);
-        }    
+        segmentos = new LineSegment[counterCtr];
+        fourPoints();//--------------------------->Find segments with 4 points.
         
         return segmentos;
     }
@@ -71,10 +66,12 @@ public class BruteCollinearPoints
     {
         public Point p1;
         public Point p2;
+        public int cantidadP;//-----> To store how many poits belong to the current line.
         Linea(Point p, Point q)
         {
             this.p1 = p;
-            this.p2 = q; 
+            this.p2 = q;
+            cantidadP=2; 
         }
     }
     /*
@@ -102,14 +99,32 @@ public class BruteCollinearPoints
         int index = findSlope(slope);
         if( index == -1)
         {
-            lineaAux[segmentCounter]= new Linea(point1, point2);
-            pendientes[segmentCounter] = slope;
-            segmentCounter++;
+            lineaAux[counterCtr]= new Linea(point1, point2);
+            pendientes[counterCtr] = slope;
+            counterCtr++;
             return;
+        }        
+        if(lineaAux[index].p2.compareTo(point2) == -1 )
+        {
+            lineaAux[index].p2 = point2;
+            lineaAux[index].cantidadP++;  
         }
-        
-        lineaAux[index].p2 = (lineaAux[index].p2.compareTo(point2) == -1 ) ? point2 : lineaAux[index].p2;
+
+        //lineaAux[index].p2 = (lineaAux[index].p2.compareTo(point2) == -1 ) ? point2 : lineaAux[index].p2;
         
     }
-    
+    private void fourPoints()
+    {
+        
+        int i=0;
+        
+        while (lineaAux[i]!= null)
+        {
+            if(lineaAux[i].cantidadP==4)
+                segmentos[i] = new LineSegment(lineaAux[i].p1, lineaAux[i].p2);
+
+            segmentCounter++;
+            i++;
+        }        
+    }
 }

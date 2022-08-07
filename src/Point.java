@@ -148,7 +148,7 @@ public class Point implements Comparable<Point>
        Point a = new Point(-5,-1);
        Point b = new Point(-6, -1);
        Point c = new Point(-7,-1);
-       Point d = new Point(-15, -23);
+       Point d = new Point(-15, -1);
        Point e = new Point(3, 4);
        //Point[] puntos = new Point[]{a,b,c,d,e};
        Point[] puntos = new Point[]{a,b,c,d};
