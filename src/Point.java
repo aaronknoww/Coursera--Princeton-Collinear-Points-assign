@@ -151,9 +151,10 @@ public class Point implements Comparable<Point>
        Point d = new Point(-15, -1);
        Point e = new Point(3, 4);
        //Point[] puntos = new Point[]{a,b,c,d,e};
-       Point[] puntos = new Point[]{a,b,c,d};
+       Point[] puntos = new Point[]{a,b,c,d,e};
        Point cero = new Point(0, 0);
        BruteCollinearPoints brute;
+       FastCollinearPoints fast;
 
     //    StdOut.println("pendiente de a : "+cero.slopeTo(a));
     //    StdOut.println("pendiente de b : "+cero.slopeTo(b));
@@ -170,12 +171,18 @@ public class Point implements Comparable<Point>
            StdOut.println("punto " + point);
            
        }
+
+       StdDraw.enableDoubleBuffering();
+       StdDraw.setXscale(0, 32768);
+       StdDraw.setYscale(0, 32768);
        
     //    if(a.compareTo(b)==1)
     //    StdOut.print("punto a es mayor " + a);        
     //    else
     //         StdOut.print(b);
     
+    StdDraw.show();
+
     a.draw();
     a.drawTo(b);
     b.draw();
@@ -183,11 +190,22 @@ public class Point implements Comparable<Point>
     d.draw();
     e.draw();
     
+    StdDraw.show();
 
     brute = new BruteCollinearPoints(puntos);
-    LineSegment[] linea = brute.segments();
-           // linea.draw();
-            StdOut.print(linea);        
-    }
+    fast = new FastCollinearPoints(puntos);
+    LineSegment[] linea4 = brute.segments();
+    LineSegment[] linea4oMas = fast.segments();
 
+    
+
+    for (LineSegment line : linea4)
+        StdOut.println(line);        
+
+    
+    for (LineSegment line : linea4oMas)
+        StdOut.println(line);        
+    
+    
+    }
 }

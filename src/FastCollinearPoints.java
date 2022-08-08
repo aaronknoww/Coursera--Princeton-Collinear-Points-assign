@@ -1,8 +1,7 @@
 import java.util.Arrays;
 
-public class BruteCollinearPoints
-{ 
-
+public class FastCollinearPoints
+{
     private Point[] _points;
     private LineSegment[] segmentos;
     private Double[] pendientes;
@@ -10,8 +9,7 @@ public class BruteCollinearPoints
     private int counterCtr;//-----------> To have control of the positions of the two arrays lineaAux and Pendientes.
     private int segmentCounter;
      
-
-    public BruteCollinearPoints(Point[] points)//--->finds all line segments containing 4 points
+    public FastCollinearPoints(Point[] points)
     {
         if (points == null)
             throw new IllegalArgumentException("An Array with a null value is not permitted");
@@ -55,7 +53,7 @@ public class BruteCollinearPoints
         }
 
         segmentos = new LineSegment[counterCtr];
-        fourPoints();//--------------------------->Find segments with 4 points.
+        fourMorePoints();//--------------------------->Find segments with 4 points.
         
         return segmentos;
     }
@@ -113,19 +111,19 @@ public class BruteCollinearPoints
         //lineaAux[index].p2 = (lineaAux[index].p2.compareTo(point2) == -1 ) ? point2 : lineaAux[index].p2;
         
     }
-    private void fourPoints()
+    private void fourMorePoints()
     {
         
         int i=0;
         
         while (lineaAux[i]!= null)
         {
-            if(lineaAux[i].cantidadP==4)
+            if(lineaAux[i].cantidadP>=4)
             {
                 segmentos[i] = new LineSegment(lineaAux[i].p1, lineaAux[i].p2);
                 segmentCounter++;
             }
-            
+
             i++;
         }        
     }
