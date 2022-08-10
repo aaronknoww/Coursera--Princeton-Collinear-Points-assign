@@ -11,7 +11,7 @@
 import java.util.Arrays;
 import java.util.Comparator;
 
-import edu.princeton.cs.algs4.Draw;
+import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdDraw;
 import edu.princeton.cs.algs4.StdOut;
 
@@ -150,17 +150,16 @@ public class Point implements Comparable<Point>
        Point c = new Point(-7,-1);
        Point d = new Point(-15, -1);
        Point e = new Point(3, 4);
-       //Point[] puntos = new Point[]{a,b,c,d,e};
        Point[] puntos = new Point[]{a,b,c,d,e};
        Point cero = new Point(0, 0);
        BruteCollinearPoints brute;
        FastCollinearPoints fast;
 
-    //    StdOut.println("pendiente de a : "+cero.slopeTo(a));
-    //    StdOut.println("pendiente de b : "+cero.slopeTo(b));
-    //    StdOut.println("pendiente de c : "+cero.slopeTo(c));
-    //    StdOut.println("pendiente de d : "+cero.slopeTo(d));
-    //    StdOut.println("pendiente de e : "+cero.slopeTo(e));
+       StdOut.println("pendiente de a : "+cero.slopeTo(a));
+       StdOut.println("pendiente de b : "+cero.slopeTo(b));
+       StdOut.println("pendiente de c : "+cero.slopeTo(c));
+       StdOut.println("pendiente de d : "+cero.slopeTo(d));
+       StdOut.println("pendiente de e : "+cero.slopeTo(e));
 
        Arrays.sort(puntos);
        //Arrays.sort(puntos);
@@ -176,36 +175,61 @@ public class Point implements Comparable<Point>
        StdDraw.setXscale(0, 32768);
        StdDraw.setYscale(0, 32768);
        
-    //    if(a.compareTo(b)==1)
-    //    StdOut.print("punto a es mayor " + a);        
-    //    else
-    //         StdOut.print(b);
-    
-    StdDraw.show();
+       if(a.compareTo(b)==1)
+       StdOut.print("punto a es mayor " + a);        
+       else
+            StdOut.print(b);
+       
+        StdDraw.show();
 
-    a.draw();
-    a.drawTo(b);
-    b.draw();
-    c.draw();
-    d.draw();
-    e.draw();
-    
-    StdDraw.show();
+        a.draw();
+        a.drawTo(b);
+        b.draw();
+        c.draw();
+        d.draw();
+        e.draw();
+       
+        StdDraw.show();
 
-    brute = new BruteCollinearPoints(puntos);
-    fast = new FastCollinearPoints(puntos);
-    LineSegment[] linea4 = brute.segments();
-    LineSegment[] linea4oMas = fast.segments();
+        brute = new BruteCollinearPoints(puntos);
+        fast = new FastCollinearPoints(puntos);
+        LineSegment[] linea4 = brute.segments();
+        LineSegment[] linea4oMas = fast.segments();
 
-    
+        for (LineSegment line : linea4)
+            StdOut.println(line);        
+              
+        for (LineSegment line : linea4oMas)
+            StdOut.println(line);        
+       
 
-    for (LineSegment line : linea4)
-        StdOut.println(line);        
 
-    
-    for (LineSegment line : linea4oMas)
-        StdOut.println(line);        
-    
-    
+             // read the n points from a file
+        In in = new In(args[0]);
+        int n = in.readInt();
+        Point[] points = new Point[n];
+        for (int i = 0; i < n; i++) {
+            int x = in.readInt();
+            int y = in.readInt();
+            points[i] = new Point(x, y);
+        }
+
+        // draw the points
+        StdDraw.enableDoubleBuffering();
+        StdDraw.setXscale(0, 32768);
+        StdDraw.setYscale(0, 32768);
+        for (Point p : points) {
+            p.draw();
+        }
+        StdDraw.show();
+
+        // print and draw the line segments
+        FastCollinearPoints collinear = new FastCollinearPoints(points);
+        for (LineSegment segment : collinear.segments()) {
+            StdOut.println(segment);
+            segment.draw();
+        }
+        StdDraw.show();
+       
     }
 }
